@@ -16,10 +16,8 @@ RUN wget https://files.phpmyadmin.net/phpMyAdmin/5.0.4/phpMyAdmin-5.0.4-all-lang
 RUN tar -xvf phpMyAdmin-5.0.4-all-languages.tar.gz
 RUN rm phpMyAdmin-5.0.4-all-languages.tar.gz
 RUN mv phpMyAdmin-5.0.4-all-languages phpMyAdmin
-
 #generate key
 #RUN openssl genrsa -out rootCA.key 2048
-
 #generate sertificate
 #RUN openssl req -x509 -new -nodes -key rootCA.key -sha256 -days 1024 -out rootCA.pem
 
@@ -27,7 +25,16 @@ RUN mv phpMyAdmin-5.0.4-all-languages phpMyAdmin
 WORKDIR /etc/nginx/sites-available/
 COPY ./srcs/nginx.conf /etc/nginx/sites-available/nginx.conf
 RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/nginx.conf
-#RUN rm /etc/nginx/sites-enabled/default
+RUN rm /etc/nginx/sites-enabled/default
+
+
+RUN openssl req -newkey rsa:2048 \
+	-x509 -sha256 -days 365 -nodes \
+	-out /etc/ssl/certs/example.crt \
+	-keyout /etc/ssl/private/example.key\
+	-subj "/C=RU/ST=Tatarstan/L=Kazan/O=Ecole/OU=21/CN=localhost"
+
+
 
 #download tar wordpress
 WORKDIR /var/www/ft_server
@@ -40,7 +47,7 @@ RUN rm latest.tar.gz
 
 COPY ./srcs/wp-config.php /var/www/ft_server/wordpress/
 
-COPY ./srcs/start.sh .
-CMD sh start.sh
+COPY ./srcs/start.sh ../
+CMD sh ../start.sh
 
-EXPOSE 80
+EXPOSE 80 443
