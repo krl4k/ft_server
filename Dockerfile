@@ -27,6 +27,7 @@ RUN mv phpMyAdmin-5.0.4-all-languages phpMyAdmin
 WORKDIR /etc/nginx/sites-available/
 COPY ./srcs/nginx.conf /etc/nginx/sites-available/nginx.conf
 RUN ln -s /etc/nginx/sites-available/nginx.conf /etc/nginx/sites-enabled/nginx.conf
+#RUN rm /etc/nginx/sites-enabled/default
 
 #download tar wordpress
 WORKDIR /var/www/ft_server
@@ -37,7 +38,7 @@ RUN rm latest.tar.gz
 #WORKDIR /var/www/ft_server/welcome_nginx/
 #RUN ln -s /var/www/html/index.nginx-debian.html /var/www/ft_server/welcome_nginx/index.html 
 
-#COPY ./srcs/wp-config.php /var/www/ft_server/wordpress/
+COPY ./srcs/wp-config.php /var/www/ft_server/wordpress/
 
 COPY ./srcs/start.sh .
 CMD sh start.sh
